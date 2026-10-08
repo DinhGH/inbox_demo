@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unified Inbox — Messenger &amp; Telegram</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="layout">
+
+    <!-- ── Left panel ───────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="app-title">📨 Unified Inbox</h1>
+        <div class="status-bar">
+          <span id="socket-dot" class="dot dot-disconnected"></span>
+          <span id="socket-label">Disconnected</span>
+        </div>
+      </div>
+
+      <!-- Platform status badges -->
+      <div class="platform-status">
+        <div class="platform-badge" id="badge-messenger" title="Facebook Messenger">
+          <span class="platform-icon">💬</span>
+          <span class="platform-name">Messenger</span>
+          <span class="platform-state" id="state-messenger">—</span>
+        </div>
+        <div class="platform-badge" id="badge-telegram" title="Telegram Bot">
+          <span class="platform-icon">✈️</span>
+          <span class="platform-name">Telegram</span>
+          <span class="platform-state" id="state-telegram">—</span>
+        </div>
+      </div>
+
+      <!-- Telegram Webhook Helper Strip -->
+      <div class="tg-webhook-strip" id="tg-webhook-strip">
+        <div class="tg-webhook-info">
+          <span class="tg-webhook-label">TG Webhook:</span>
+          <span class="tg-webhook-val" id="tg-webhook-val">checking…</span>
+        </div>
+        <button id="btn-toggle-webhook" class="btn-link" title="Cấu hình Webhook Telegram">Cấu hình</button>
+      </div>
+
+      <!-- Webhook setup drawer / form (collapsible) -->
+      <div id="webhook-panel" class="webhook-panel hidden">
+        <div class="webhook-panel-header">
+          <span>⚙️ Cài đặt Webhook Telegram</span>
+          <button id="btn-close-webhook" class="btn-close">&times;</button>
+        </div>
+        <div class="webhook-panel-body">
+          <label for="input-webhook-url">Ngrok URL:</label>
+          <input
+            type="url"
+            id="input-webhook-url"
+            placeholder="https://xxxx.ngrok-free.dev"
+            autocomplete="off"
+          />
+          <div class="webhook-actions">
+            <button id="btn-save-webhook" class="btn btn-sm btn-primary">Lưu Webhook</button>
+            <button id="btn-check-webhook" class="btn btn-sm btn-secondary">Kiểm tra</button>
+          </div>
+          <div id="webhook-feedback" class="webhook-feedback hidden"></div>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <button class="tab-btn active" data-platform="ALL">Tất cả</button>
+        <button class="tab-btn" data-platform="MESSENGER">💬 Messenger</button>
+        <button class="tab-btn" data-platform="TELEGRAM">✈️ Telegram</button>
+      </div>
+
+      <div class="sidebar-actions">
+        <button id="btn-refresh" class="btn btn-secondary">↺ Làm mới</button>
+        <button id="btn-simulate-tg" class="btn btn-secondary btn-sm" title="Giả lập tin nhắn Telegram đến">🧪 Test TG</button>
+      </div>
+
+      <div id="conv-list" class="conv-list">
+        <div class="empty-state">Chưa có hội thoại nào.<br/><small>Gửi tin nhắn qua Messenger hoặc Telegram để bắt đầu.</small></div>
+      </div>
+    </aside>
+
+    <!-- ── Right panel ──────────────────────────────────────────── -->
+    <main class="chat-panel">
+
+      <div id="chat-empty" class="chat-empty">
+        <p>Chọn một cuộc trò chuyện để xem tin nhắn.</p>
+      </div>
+
+      <div id="chat-view" class="chat-view hidden">
+
+        <div class="chat-header">
+          <div>
+            <div id="chat-name" class="chat-name">—</div>
+            <div id="chat-meta" class="chat-psid"></div>
+          </div>
+          <div id="chat-platform-badge" class="chat-platform-label"></div>
+        </div>
+
+        <div id="message-list" class="message-list">
+          <div id="msg-loading" class="loading-state hidden">Đang tải tin nhắn…</div>
+          <div id="msg-empty"   class="empty-state hidden">Chưa có tin nhắn nào.</div>
+        </div>
+
+        <form id="reply-form" class="reply-form">
+          <textarea
+            id="reply-input"
+            class="reply-input"
+            placeholder="Nhập tin nhắn trả lời… (Nhấn Ctrl+Enter để gửi)"
+            rows="2"
+            maxlength="4096"
+          ></textarea>
+          <button type="submit" id="btn-send" class="btn btn-primary">Gửi</button>
+        </form>
+
+        <div id="send-error" class="send-error hidden"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
